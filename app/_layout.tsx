@@ -14,7 +14,7 @@ if (!publishableKey) {
 }
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     'sans-regular': require('../assets/fonts/PlusJakartaSans-Regular.ttf'),
     'sans-bold': require('../assets/fonts/PlusJakartaSans-Bold.ttf'),
     'sans-medium': require('../assets/fonts/PlusJakartaSans-Medium.ttf'),
@@ -24,10 +24,11 @@ export default function RootLayout() {
   })
 
   useEffect(() => {
-    if (fontsLoaded) SplashScreen.hideAsync()
-  }, [fontsLoaded])
+    if (fontsLoaded || fontError) SplashScreen.hideAsync()
+  }, [fontsLoaded, fontError])
 
-  if (!fontsLoaded) return null
+  if (!fontsLoaded && !fontError) return null
+  if (fontError) throw fontError
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>

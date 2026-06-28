@@ -81,7 +81,7 @@ export default function SignIn() {
               <BrandBlock />
 
               <View className="auth-brand-block">
-                <Text className="auth-title text-center">Verify it's you</Text>
+                <Text className="auth-title text-center">Verify it is you</Text>
                 <Text className="auth-subtitle">
                   We sent a 6-digit code to your email. Enter it below to continue.
                 </Text>
