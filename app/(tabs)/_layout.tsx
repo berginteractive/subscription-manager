@@ -1,4 +1,5 @@
-import {Tabs} from "expo-router";
+import { useAuth } from '@clerk/expo'
+import { Redirect, Tabs } from 'expo-router'
 import {tabs} from "@/constants/data";
 import {View} from "react-native";
 import clsx from "clsx";
@@ -9,7 +10,11 @@ import {components, colors} from "@/constants/theme";
 const tabBar = components.tabBar;
 
 const TabLayout= () => {
+        const { isSignedIn, isLoaded } = useAuth()
         const insets = useSafeAreaInsets();
+
+        if (!isLoaded) return null
+        if (!isSignedIn) return <Redirect href="/(auth)/sign-in" />
         const TabIcon = ({focused, icon}: TabIconProps) => {
                 return (
                     <View className="tabs-icon">

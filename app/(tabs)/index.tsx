@@ -18,10 +18,6 @@ export default function App() {
     const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
     return (
         <SafeAreaView className={"flex-1 bg-background p-5"}>
-
-
-
-
                 <FlatList
                     ListHeaderComponent={() => (
                         <>
