@@ -70,6 +70,10 @@ export default function SignIn() {
   const handleVerify = async () => {
     await signIn.mfa.verifyEmailCode({ code })
     if (signIn.status === 'complete') {
+      posthog.identify(email.trim(), {
+        $set: { email: email.trim() },
+      })
+      posthog.capture('user_signed_in')
       await signIn.finalize({ navigate: handleNavigate })
     }
   }

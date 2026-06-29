@@ -62,7 +62,7 @@ export default function SignUp() {
   const handleVerify = async () => {
     await signUp.verifications.verifyEmailCode({ code })
     if (signUp.status === 'complete') {
-      posthog.identify(email.trim(), {
+      posthog.identify(signUp.createdUserId ?? email.trim(), {
         $set: { email: email.trim() },
         $set_once: { first_sign_up_date: new Date().toISOString() },
       })

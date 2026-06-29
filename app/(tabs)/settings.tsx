@@ -67,11 +67,11 @@ const Settings = () => {
             {/* Sign out */}
             <Pressable
                 className="items-center rounded-2xl bg-accent py-4"
-                onPress={() => {
-                posthog.capture('user_signed_out')
-                posthog.reset()
-                signOut()
-            }}
+                onPress={async () => {
+                    posthog.capture('user_signed_out')
+                    await signOut()
+                    posthog.reset()
+                }}
             >
                 <Text className="text-base font-sans-bold text-white">Sign Out</Text>
             </Pressable>

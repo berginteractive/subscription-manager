@@ -1,6 +1,6 @@
 import { ClerkProvider } from '@clerk/expo'
 import { tokenCache } from '@clerk/expo/token-cache'
-import { SplashScreen, Stack, usePathname, useGlobalSearchParams } from 'expo-router'
+import { SplashScreen, Stack, usePathname } from 'expo-router'
 import '@/global.css'
 import { useFonts } from 'expo-font'
 import { useEffect, useRef } from 'react'
@@ -26,7 +26,6 @@ export default function RootLayout() {
   })
 
   const pathname = usePathname()
-  const params = useGlobalSearchParams()
   const previousPathname = useRef<string | undefined>(undefined)
 
   useEffect(() => {
@@ -37,11 +36,10 @@ export default function RootLayout() {
     if (previousPathname.current !== pathname) {
       posthog.screen(pathname, {
         previous_screen: previousPathname.current ?? null,
-        ...params,
       })
       previousPathname.current = pathname
     }
-  }, [pathname, params])
+  }, [pathname])
 
   if (!fontsLoaded && !fontError) return null
   if (fontError) throw fontError
