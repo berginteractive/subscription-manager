@@ -1,13 +1,66 @@
-import {Text} from 'react-native'
-import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
-import {styled} from "nativewind";
-const SafeAreaView = styled(RNSafeAreaView);
+import { useState } from 'react'
+import { View, Text, TextInput, FlatList } from 'react-native'
+import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context'
+import { styled } from 'nativewind'
+import SubscriptionCard from '@/components/SubscriptionCard'
+import { HOME_SUBSCRIPTIONS } from '@/constants/data'
+
+const SafeAreaView = styled(RNSafeAreaView)
+
+const PLACEHOLDER_COLOR = 'rgba(0,0,0,0.3)'
 
 const Subscriptions = () => {
+    const [query, setQuery] = useState('')
+    const [expandedId, setExpandedId] = useState<string | null>(null)
+
+    const filtered = query.trim()
+        ? HOME_SUBSCRIPTIONS.filter(s =>
+              s.name.toLowerCase().includes(query.toLowerCase()) ||
+              s.plan?.toLowerCase().includes(query.toLowerCase()) ||
+              s.category?.toLowerCase().includes(query.toLowerCase()),
+          )
+        : HOME_SUBSCRIPTIONS
+
     return (
-        <SafeAreaView className={"flex-1 bg-background p-5"}>
-            <Text>Subscriptions</Text>
+        <SafeAreaView className="flex-1 bg-background" edges={['top', 'left', 'right']}>
+            <View className="subs-header">
+                <Text className="subs-title">My Subscriptions</Text>
+                <View className="subs-search-wrap">
+                    <TextInput
+                        className="subs-search-input"
+                        value={query}
+                        onChangeText={setQuery}
+                        placeholder="Search subscriptions…"
+                        placeholderTextColor={PLACEHOLDER_COLOR}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        clearButtonMode="while-editing"
+                        returnKeyType="search"
+                    />
+                </View>
+            </View>
+
+            <FlatList
+                data={filtered}
+                keyExtractor={item => item.id}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
+                contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 20, gap: 12 }}
+                renderItem={({ item }) => (
+                    <SubscriptionCard
+                        {...item}
+                        expanded={expandedId === item.id}
+                        onPress={() =>
+                            setExpandedId(prev => (prev === item.id ? null : item.id))
+                        }
+                    />
+                )}
+                ListEmptyComponent={
+                    <Text className="subs-empty">No subscriptions found</Text>
+                }
+            />
         </SafeAreaView>
     )
 }
+
 export default Subscriptions

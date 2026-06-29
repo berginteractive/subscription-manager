@@ -54,7 +54,7 @@ export default function App() {
                                 />
                             </View>
 
-                            <ListHeading title={"All subscriptions"} />
+                            <ListHeading title={"All subscriptions"} href={"/(tabs)/subscriptions"} />
                         </>
                     )}
                     data={HOME_SUBSCRIPTIONS}
