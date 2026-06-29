@@ -3,7 +3,7 @@ import { View, Text, TextInput, FlatList } from 'react-native'
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context'
 import { styled } from 'nativewind'
 import SubscriptionCard from '@/components/SubscriptionCard'
-import { HOME_SUBSCRIPTIONS } from '@/constants/data'
+import { useSubscriptions } from '@/context/SubscriptionsContext'
 
 const SafeAreaView = styled(RNSafeAreaView)
 
@@ -12,15 +12,16 @@ const PLACEHOLDER_COLOR = 'rgba(0,0,0,0.3)'
 const Subscriptions = () => {
     const [query, setQuery] = useState('')
     const [expandedId, setExpandedId] = useState<string | null>(null)
+    const { subscriptions } = useSubscriptions()
 
     const term = query.trim().toLowerCase()
     const filtered = term
-        ? HOME_SUBSCRIPTIONS.filter(s =>
+        ? subscriptions.filter(s =>
               s.name.toLowerCase().includes(term) ||
               s.plan?.toLowerCase().includes(term) ||
               s.category?.toLowerCase().includes(term),
           )
-        : HOME_SUBSCRIPTIONS
+        : subscriptions
 
     return (
         <SafeAreaView className="flex-1 bg-background" edges={['top', 'left', 'right']}>
