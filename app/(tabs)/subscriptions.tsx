@@ -13,11 +13,12 @@ const Subscriptions = () => {
     const [query, setQuery] = useState('')
     const [expandedId, setExpandedId] = useState<string | null>(null)
 
-    const filtered = query.trim()
+    const term = query.trim().toLowerCase()
+    const filtered = term
         ? HOME_SUBSCRIPTIONS.filter(s =>
-              s.name.toLowerCase().includes(query.toLowerCase()) ||
-              s.plan?.toLowerCase().includes(query.toLowerCase()) ||
-              s.category?.toLowerCase().includes(query.toLowerCase()),
+              s.name.toLowerCase().includes(term) ||
+              s.plan?.toLowerCase().includes(term) ||
+              s.category?.toLowerCase().includes(term),
           )
         : HOME_SUBSCRIPTIONS
 
