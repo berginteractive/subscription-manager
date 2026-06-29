@@ -6,7 +6,7 @@ Use this guide when integrating PostHog into a **bare React Native** project (no
 
 Use `react-native-config` to load `POSTHOG_PROJECT_TOKEN` and `POSTHOG_HOST` from a `.env` file. Variables are embedded at build time, not runtime.
 
-```
+```dotenv
 POSTHOG_PROJECT_TOKEN=phc_xxx
 POSTHOG_HOST=https://eu.i.posthog.com
 ```

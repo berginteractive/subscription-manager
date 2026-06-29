@@ -1,6 +1,6 @@
 import { ClerkProvider } from '@clerk/expo'
 import { tokenCache } from '@clerk/expo/token-cache'
-import { SplashScreen, Stack, usePathname } from 'expo-router'
+import { SplashScreen, Stack, useSegments } from 'expo-router'
 import '@/global.css'
 import { useFonts } from 'expo-font'
 import { useEffect, useRef } from 'react'
@@ -25,7 +25,8 @@ export default function RootLayout() {
     'sans-light': require('../assets/fonts/PlusJakartaSans-Light.ttf'),
   })
 
-  const pathname = usePathname()
+  const segments = useSegments()
+  const routePattern = '/' + segments.filter(s => !s.startsWith('(')).join('/')
   const previousPathname = useRef<string | undefined>(undefined)
 
   useEffect(() => {
@@ -33,13 +34,13 @@ export default function RootLayout() {
   }, [fontsLoaded, fontError])
 
   useEffect(() => {
-    if (previousPathname.current !== pathname) {
-      posthog.screen(pathname, {
+    if (previousPathname.current !== routePattern) {
+      posthog.screen(routePattern, {
         previous_screen: previousPathname.current ?? null,
       })
-      previousPathname.current = pathname
+      previousPathname.current = routePattern
     }
-  }, [pathname])
+  }, [routePattern])
 
   if (!fontsLoaded && !fontError) return null
   if (fontError) throw fontError
