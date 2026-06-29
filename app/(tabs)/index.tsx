@@ -12,10 +12,12 @@ import ListHeading from "@/components/ListHeading";
 import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
 import SubscriptionCard from "@/components/SubscriptionCard";
 import {useState} from "react";
+import { usePostHog } from 'posthog-react-native'
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
     const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
+    const posthog = usePostHog()
     return (
         <SafeAreaView className={"flex-1 bg-background p-5"}>
                 <FlatList
@@ -61,7 +63,15 @@ export default function App() {
                         <SubscriptionCard
                             { ... item}
                             expanded={expandedSubscriptionId === item.id}
-                            onPress={() => setExpandedSubscriptionId((currentId) => (currentId === item.id ? null : item.id))}
+                            onPress={() => {
+                                const isExpanding = expandedSubscriptionId !== item.id
+                                setExpandedSubscriptionId((currentId) => (currentId === item.id ? null : item.id))
+                                if (isExpanding) {
+                                    posthog.capture('subscription_card_expanded', {
+                                        subscription_id: item.id,
+                                    })
+                                }
+                            }}
                         />
                     )}
                     extraData={expandedSubscriptionId}
