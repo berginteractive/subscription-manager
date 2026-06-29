@@ -1,6 +1,7 @@
 import { useAuth, useSignUp } from '@clerk/expo'
 import { type Href, Link, useRouter } from 'expo-router'
 import { useState } from 'react'
+import { usePostHog } from 'posthog-react-native'
 import {
   View,
   Text,
@@ -38,6 +39,7 @@ export default function SignUp() {
   const { signUp, errors, fetchStatus } = useSignUp()
   const { isSignedIn } = useAuth()
   const router = useRouter()
+  const posthog = usePostHog()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -60,6 +62,11 @@ export default function SignUp() {
   const handleVerify = async () => {
     await signUp.verifications.verifyEmailCode({ code })
     if (signUp.status === 'complete') {
+      posthog.identify(signUp.createdUserId ?? email.trim(), {
+        $set: { email: email.trim() },
+        $set_once: { first_sign_up_date: new Date().toISOString() },
+      })
+      posthog.capture('user_signed_up')
       await signUp.finalize({ navigate: handleNavigate })
     }
   }

@@ -4,17 +4,28 @@ import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context'
 import { styled } from 'nativewind'
 import images from '@/constants/images'
 import dayjs from 'dayjs'
+import { usePostHog } from 'posthog-react-native'
+import { useEffect } from 'react'
 
 const SafeAreaView = styled(RNSafeAreaView)
 
 const Settings = () => {
     const { user } = useUser()
     const { signOut } = useClerk()
+    const posthog = usePostHog()
 
     const email = user?.primaryEmailAddress?.emailAddress ?? ''
     const userId = user?.id ?? ''
     const joinedDate = user?.createdAt ? dayjs(user.createdAt).format('DD. MM. YYYY.') : '—'
     const truncatedId = userId.length > 20 ? userId.slice(0, 20) + '…' : userId
+
+    useEffect(() => {
+        if (userId) {
+            posthog.identify(userId, {
+                $set: { email },
+            })
+        }
+    }, [userId, email, posthog])
 
     return (
         <SafeAreaView className="flex-1 bg-background p-5">
@@ -56,7 +67,15 @@ const Settings = () => {
             {/* Sign out */}
             <Pressable
                 className="items-center rounded-2xl bg-accent py-4"
-                onPress={() => signOut()}
+                onPress={async () => {
+                    try {
+                        await signOut()
+                        posthog.capture('user_signed_out')
+                        posthog.reset()
+                    } catch {
+                        // sign-out failed; identity preserved
+                    }
+                }}
             >
                 <Text className="text-base font-sans-bold text-white">Sign Out</Text>
             </Pressable>

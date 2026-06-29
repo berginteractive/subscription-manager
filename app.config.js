@@ -1,0 +1,9 @@
+import appJson from './app.json'
+
+export default {
+  ...appJson.expo,
+  extra: {
+    posthogProjectToken: process.env.POSTHOG_PROJECT_TOKEN,
+    posthogHost: process.env.POSTHOG_HOST || 'https://eu.i.posthog.com',
+  },
+}

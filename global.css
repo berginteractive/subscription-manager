@@ -417,4 +417,24 @@
     .category-chip-text-active {
         @apply text-accent;
     }
+
+    .subs-header {
+        @apply px-5 pb-3 pt-5;
+    }
+
+    .subs-title {
+        @apply mb-4 text-3xl font-sans-bold text-primary;
+    }
+
+    .subs-search-wrap {
+        @apply flex-row items-center rounded-2xl border border-border bg-card px-4;
+    }
+
+    .subs-search-input {
+        @apply flex-1 py-4 text-base font-sans-medium text-primary;
+    }
+
+    .subs-empty {
+        @apply py-10 text-center text-sm font-sans-medium text-muted-foreground;
+    }
 }
