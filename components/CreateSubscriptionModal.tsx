@@ -49,7 +49,8 @@ export default function CreateSubscriptionModal({ visible, onClose, onCreate }: 
     const [frequency, setFrequency] = useState<'Monthly' | 'Yearly'>('Monthly')
     const [category, setCategory] = useState('')
 
-    const parsedPrice = parseFloat(price)
+    const trimmedPrice = price.trim()
+    const parsedPrice = /^\d+(\.\d+)?$/.test(trimmedPrice) ? parseFloat(trimmedPrice) : NaN
     const isValid = name.trim().length > 0 && !isNaN(parsedPrice) && parsedPrice > 0
 
     const clearForm = () => {
