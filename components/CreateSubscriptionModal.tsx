@@ -80,7 +80,7 @@ export default function CreateSubscriptionModal({ visible, onClose, onCreate }: 
             price: parsedPrice,
             currency: 'USD',
             billing: frequency,
-            category: category || undefined,
+            category: category || 'Other',
             status: 'active',
             startDate: now.toISOString(),
             renewalDate,
@@ -91,7 +91,7 @@ export default function CreateSubscriptionModal({ visible, onClose, onCreate }: 
             subscription_name: name.trim(),
             subscription_price: parsedPrice,
             subscription_frequency: frequency,
-            subscription_category: category,
+            subscription_category: category || 'Other',
         })
         clearForm()
     }
